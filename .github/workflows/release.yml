@@ -31,13 +31,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.21
-      - name: Set GPG_TTY to address ioctl error
-        run: |
-            {
-              echo 'GPG_TTY<<--EOF--'
-              echo $TTY
-              echo --EOF--
-            } >> "$GITHUB_ENV"
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v6.1.0
@@ -49,7 +42,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
-          args: release --rm-dist
+          args: release --clean
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically

@@ -10,10 +10,10 @@ builds:
   ldflags:
     - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X github.com/DopplerHQ/terraform-provider-doppler/doppler.ProviderVersion={{.Version}}'
   goos:
-    - freebsd
-    - windows
+    # - freebsd
+    # - windows
     - linux
-    - darwin
+    # - darwin
   goarch:
     - amd64
     - '386'
@@ -41,6 +41,7 @@ signs:
       - "${signature}"
       - "--detach-sign"
       - "${artifact}"
+    output: true
 release:
   # If you want to manually examine the release before its live, uncomment this line:
   # draft: true
