@@ -22,10 +22,9 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
-      -
-        name: Unshallow
-        run: git fetch --prune --unshallow
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       -
         name: Set up Go
         uses: actions/setup-go@v2
@@ -36,7 +35,6 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v6.1.0
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          # passphrase: ${{ secrets.GPG_PASSPHRASE }}
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
@@ -45,10 +43,10 @@ jobs:
           args: release
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-          # GitHub sets this automatically
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check for manifest.json
-        run: ls -l dist
+      - name: Create manifest file
+        run: |        
+          echo '{ "metadata": { "protocol_versions": ["5.0"] } }' >> dist/terraform-provider-doppler_${{ github.event.release.tag_name }}_manifest.json
       - name: Publish provider
         uses: thechrisjohnson/terraform-cloud-provider-publish@9c741f7c267fd8c1049089dbcc788eb83a1b0b69 # v1.3
         with:
