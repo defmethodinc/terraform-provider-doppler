@@ -45,8 +45,9 @@ jobs:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create manifest file
-        run: |        
-          echo '{ "metadata": { "protocol_versions": ["5.0"] } }' >> dist/terraform-provider-doppler_${{ github.event.release.tag_name }}_manifest.json
+        run: |
+          version=$(echo ${{ github.event.release.tag_name }} | sed 's/v//')
+          echo '{ "metadata": { "protocol_versions": ["5.0"] } }' >> dist/terraform-provider-doppler_${version}_manifest.json
       - name: Publish provider
         uses: thechrisjohnson/terraform-cloud-provider-publish@9c741f7c267fd8c1049089dbcc788eb83a1b0b69 # v1.3
         with:
