@@ -34,12 +34,10 @@ jobs:
       - name: Configure gpg to work without a TTY
         run: |
           mkdir -p ~/.gnupg
-          echo "use-agent" >> ~/.gnupg/gpg.conf
-          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           find ~/.gnupg -type d -exec chmod 700 {} \;
           find ~/.gnupg -type f -exec chmod 600 {} \;
-          echo RELOADAGENT | gpg-connect-agent
+          gpgconf --reload gpg-agent
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v6.1.0
