@@ -31,13 +31,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.21
-      - name: Configure gpg to work without a TTY
-        run: |
-          mkdir -p ~/.gnupg
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          find ~/.gnupg -type d -exec chmod 700 {} \;
-          find ~/.gnupg -type f -exec chmod 600 {} \;
-          gpgconf --reload gpg-agent
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v6.1.0
@@ -49,7 +42,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
-          args: release --clean
+          args: release --clean --verbose
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           # GitHub sets this automatically
